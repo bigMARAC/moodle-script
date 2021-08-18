@@ -19,13 +19,20 @@ async function start() {
 
   await page.waitForSelector("a[title='INE5403-01208A (20211)']")
   await page.goto("https://moodle.ufsc.br/mod/bigbluebuttonbn/view.php?id=2989169")
-  await page.evaluate(() => {
-    $("#join_button_input").click()
+  const url = await page.evaluate(() => {
+    const value = $("#join_button_input")[0].attributes[4].value
+    const first = value.indexOf('(') + 2
+    const last = value.indexOf(')') - 1
+    const url = value.substring(first, last)
+    return url
   })
+
+  console.log(url)
 
   await new Promise(_ => setTimeout(_, 15000))
 
   const lista = await page.evaluate(() => {
+    // document.querySelectorAll(".jumbo--Z12Rgj4.buttonWrapper--x8uow.audioBtn--1H6rCK")[1].click()
     const nodeList = document.querySelectorAll('.item--ZDfG6l')
     const itensArray = [...nodeList]
     const list = itensArray.map(div => ({
